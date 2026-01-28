@@ -63,7 +63,7 @@ namespace TelefonRehberi
             do
             {
                 Console.Write(msg);
-                if (!double.TryParse(Console.ReadLine(), out val))
+                if (!double.TryParse(Console.ReadLine(),NumberStyles.Any, CultureInfo.CurrentCulture, out val))
                 {
                     Console.WriteLine("Geçerli bir sayı giriniz.");
                     err = true;
@@ -86,7 +86,7 @@ namespace TelefonRehberi
             do
             {
                 Console.Write(msg);
-                if (!decimal.TryParse(Console.ReadLine(), out val))
+                if (!decimal.TryParse(Console.ReadLine(), NumberStyles.Any, CultureInfo.CurrentCulture, out val))
                 {
                     Console.WriteLine("Geçerli bir fiyat giriniz.");
                     err = true;
