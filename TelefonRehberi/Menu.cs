@@ -8,7 +8,8 @@ namespace TelefonRehberi
 {
     internal class Menu
     {
-        private readonly PersonService _service = new();
+        private readonly MenuService _menuService = new();
+
         internal void MenuOptions(ConsoleKey key)
         {
             switch (key)
@@ -51,148 +52,49 @@ namespace TelefonRehberi
         public void ListBlocked(string v)
         {
             Header(v);
-            if (_service.HasBlockedPersons())
-            {
-                var blockedCount = Lister.ListPersons(_service.GetBlockedPersons());
-                ToMenu(string.Format("{0} adet engelli kişi listelendi.", blockedCount));
-            }
-            else ToMenu("Engelli listesinde kayıtlı kişi bulunmamaktadır.");
+            ToMenu(_menuService.ListBlocked());
         }
 
         public void BlockPerson(string v)
         {
             Header(v);
-            if (_service.HasPersons())
-            {
-                var personCount = Lister.ListPersons(_service.GetAllPersons());
-                int index = Getter.GetInt("Engellemek istediğiniz kişinin numarasını giriniz: ", 1, personCount) - 1;
-                var personToBlock = _service.GetPerson(index);
-                if (personToBlock.IsBlocked)
-                {
-                    Console.WriteLine("Seçilen kişi zaten engellenenler listesinde bulunmaktadır.");
-                    Console.Write("{0} adlı kişinin engelini kaldırmak ister misiniz?(e) ", personToBlock.FullName);
-                    if (Console.ReadKey().Key == ConsoleKey.E)
-                    {
-                        personToBlock.ToggleBlocked();
-                        ToMenu("Kişi engelli listesinden başarıyla çıkarıldı.");
-                    }
-                    else ToMenu("Kişi engelli listesinden çıkarma işlemi iptal edildi.");
-                }
-                else
-                {
-                    Console.Write("{0} adlı kişiyi engelli listesine eklemek istediğinize emin misiniz?(e) ", personToBlock.FullName);
-                    if (Console.ReadKey().Key == ConsoleKey.E)
-                    {
-                        personToBlock.ToggleBlocked();
-                        ToMenu("Kişi engelli listesine başarıyla eklendi.");
-                    }
-                    else ToMenu("Kişi engelli listesine ekleme işlemi iptal edildi.");
-                }
-            }
-            else ToMenu("Rehberde kayıtlı kişi bulunmamaktadır.");
+            ToMenu(_menuService.BlockPerson());
         }
 
         public void ListQuickCalls(string v)
         {
             Header(v);
-            if (_service.HasQuickCalls())
-            {
-                var quickCallsCount = Lister.ListPersons(_service.GetQuickCalls());
-                ToMenu(string.Format("{0} adet hızlı arama listelendi.", quickCallsCount));
-            }
-            else ToMenu("Hızlı arama listesinde kayıtlı kişi bulunmamaktadır.");
+            ToMenu(_menuService.ListQuickCalls());
         }
 
         public void AddToQuickCall(string v)
         {
             Header(v);
-            if (_service.HasPersons())
-            {
-                var personsCount = Lister.ListPersons(_service.GetAllPersons());
-                int index = Getter.GetInt("Hızlı aramaya eklemek istediğiniz kişinin numarasını giriniz: ", 1, personsCount) - 1;
-                var personToAdd = _service.GetPerson(index);
-                if (personToAdd.IsQuickCall)
-                {
-                    Console.WriteLine("Seçilen kişi zaten hızlı arama listesinde bulunmaktadır.");
-                    Console.Write("{0} adlı kişiyi hızlı arama listesinden çıkartmak ister misiniz?(e) ", personToAdd.FullName);
-                    if (Console.ReadKey().Key == ConsoleKey.E)
-                    {
-                        personToAdd.ToggleQuickCall();
-                        ToMenu("Kişi hızlı arama listesinden başarıyla çıkarıldı.");
-                    }
-                    else ToMenu("Kişi hızlı arama listesinden çıkarma işlemi iptal edildi.");
-                }
-                else
-                {
-                    Console.Write("{0} adlı kişiyi hızlı arama listesine eklemek istediğinize emin misiniz?(e) ", personToAdd.FullName);
-                    if (Console.ReadKey().Key == ConsoleKey.E)
-                    {
-                        personToAdd.ToggleQuickCall();
-                        ToMenu("Kişi hızlı arama listesine başarıyla eklendi.");
-                    }
-                    else ToMenu("Kişi hızlı arama listesine ekleme işlemi iptal edildi.");
-                }
-            }
-            else ToMenu("Rehberde kayıtlı kişi bulunmamaktadır.");
+            ToMenu(_menuService.AddToQuickCall());
         }
 
         public void RemovePerson(string v)
         {
             Header(v);
-            if (_service.HasPersons())
-            {
-                var personsCount = Lister.ListPersons(_service.GetAllPersons());
-                int index = Getter.GetInt("Silinecek kişinin numarasını giriniz: ", 1, personsCount) - 1;
-                var personToRemove = _service.GetPerson(index);
-                Console.Write("{0} adlı kişiyi silmek istediğinize emin misiniz?(e) ", personToRemove.FullName);
-                if (Console.ReadKey().Key == ConsoleKey.E)
-                {
-                    _service.DeletePerson(personToRemove);
-                    ToMenu("Kişi rehberden başarıyla silindi.");
-                }
-                else ToMenu("Kişi silme işlemi iptal edildi.");
-            }
-            else ToMenu("Rehberde kayıtlı kişi bulunmamaktadır.");
+            ToMenu(_menuService.RemovePerson());
         }
 
         public void FindPerson(string v)
         {
             Header(v);
-            if (_service.HasPersons())
-            {
-                var filteredPersons = _service.FindPerson(Getter.GetString("Aramak istediğiniz kişinin adı veya numarası: ").Replace(" ", "").ToLowerInvariant());
-                if (filteredPersons.Any())
-                {
-                    Lister.ListPersons(filteredPersons);
-                    ToMenu(string.Format("{0} adet kişi bulundu.", filteredPersons.Count));
-                }
-                else ToMenu("Arama kriterlerine uygun kişi bulunamadı.");
-            }
-            else ToMenu("Rehberde kayıtlı kişi bulunmamaktadır.");
+            ToMenu(_menuService.FindPerson());
         }
 
         public void ListPerson(string v)
         {
             Header(v);
-            if (_service.HasPersons())
-            {
-                var personsCount = Lister.ListPersons(_service.GetAllPersons());
-                ToMenu(string.Format("{0} adet kişi listelendi.", personsCount));
-            }
-            else ToMenu("Rehberde kayıtlı kişi bulunmamaktadır.");
+            ToMenu(_menuService.ListPerson());
         }
 
         public void AddPerson(string v)
         {
             Header(v);
-            Console.WriteLine("Kişinin; ");
-            var person = new Person(
-                Getter.GetString("Adı: "),
-                Getter.GetString("Soyadı: "),
-                Getter.GetPhoneNumber("Telefon Numarası: "));
-            _service.AddPerson(person);
-            ToMenu("Kişi rehbere başarıyla eklendi.");
-
+            ToMenu(_menuService.AddPerson(v));
         }
 
         private void ToMenu(string v)
@@ -208,10 +110,7 @@ namespace TelefonRehberi
         {
             Console.Clear();
             Console.WriteLine(v);
-            for (int i = 0; i < v.Length; i++)
-            {
-                Console.Write("-");
-            }
+            Console.WriteLine(new string('-', v.Length));
             Console.WriteLine();
         }
 

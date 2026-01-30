@@ -14,7 +14,7 @@ namespace TelefonRehberi
         public string FullName => string.Format("{0} {1}", Name, Surname);
         public bool IsQuickCall { get; private set; } = false;
         public bool IsBlocked { get; private set; } = false;
-        public string ToPrint()
+        public override string ToString()
         {
             string toPrint = string.Format("{0} : {1}",FullName,PhoneNumber);
             if(IsBlocked) toPrint += " (ENGELLİ)";
