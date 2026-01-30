@@ -125,5 +125,41 @@ namespace TelefonRehberi
             while (err);
             return date;
         }
+
+        public static string GetPhoneNumber(string msg)
+        {
+            string? txt = string.Empty;
+            bool err = false;
+            do
+            {
+                Console.Write(msg);
+                txt = Console.ReadLine();
+                if (string.IsNullOrEmpty(txt))
+                {
+                    Console.WriteLine("Boş değer girilemez");
+                    err = true;
+                }
+                else
+                {
+                    string number;
+                    if (txt.StartsWith("+")) number = txt.Substring(1);
+                    else number = txt;
+
+                    if (txt.Length < 10 || txt.Length > 15) 
+                    {
+                        Console.WriteLine("Telefon numarası en az 10, en fazla 15 karakter olmalıdır.");
+                        err = true;
+                    }
+                    else if (!number.All(char.IsDigit))
+                    {
+                        Console.WriteLine("Geçerli bir telefon numarası giriniz.");
+                        err = true;
+                    }
+                    else err = false;
+                }
+            }
+            while (err);
+            return txt;
+        }
     }
 }

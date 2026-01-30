@@ -8,16 +8,34 @@ namespace TelefonRehberi
 {
     internal class Person
     {
-        public string Name { get; set; }
-        public string Surname { get; set; }
-        public string PhoneNumber { get; set; }
-        public string Mail { get; set; }
-        public string FullName { get { return Name + " " + Surname; } }
-        public bool isQuickCall { get; set; }
-        public bool isBlocked { get; set; }
-        public void Print(int order)
+        public string Name { get; }
+        public string Surname { get; }
+        public string PhoneNumber { get; }
+        public string FullName => string.Format("{0} {1}", Name, Surname);
+        public bool IsQuickCall { get; private set; } = false;
+        public bool IsBlocked { get; private set; } = false;
+        public string ToPrint()
         {
-            Console.WriteLine("{0}- {1} : {2}",order,FullName,PhoneNumber);
+            string toPrint = string.Format("{0} : {1}",FullName,PhoneNumber);
+            if(IsBlocked) toPrint += " (ENGELLİ)";
+            if(IsQuickCall) toPrint += " (HIZLI ARAMA)";
+            toPrint += Environment.NewLine;
+            return toPrint;
+        }
+        public Person(string name, string surname, string phoneNumber)
+        {
+            Name = name;
+            Surname = surname;
+            PhoneNumber = phoneNumber;
+        }
+        public void ToggleQuickCall()
+        {
+            IsQuickCall = !IsQuickCall;
+        }
+
+        public void ToggleBlocked()
+        {
+            IsBlocked = !IsBlocked;
         }
     }
 }

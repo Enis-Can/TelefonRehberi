@@ -12,6 +12,7 @@
 using TelefonRehberi;
 
 ConsoleKey key;
+Menu _menu = new();
 
 do
 {
@@ -27,6 +28,11 @@ do
     Console.WriteLine("9- Programdan Çık");
     Console.Write("Bir işlem seçiniz: ");
     key = Console.ReadKey().Key;
-    Menu.MenuOptions(key);
+    _menu.MenuOptions(key);
 }
 while (key != ConsoleKey.D9 && key != ConsoleKey.NumPad9);
+
+Console.WriteLine();
+Console.WriteLine("Uygulamayı kullandığınız için teşekkürler.");
+Console.WriteLine("Uygulamadan çıkmak için herhangi bir tuşa basınız.");
+Console.ReadKey();
