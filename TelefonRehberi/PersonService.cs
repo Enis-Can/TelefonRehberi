@@ -22,7 +22,7 @@ namespace TelefonRehberi
         }
         public IReadOnlyList<Person> GetAllPersons()
         {
-            return persons.ToList();
+            return persons.AsReadOnly();
         }
         public void AddPerson(Person person)
         {

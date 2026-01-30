@@ -8,7 +8,12 @@ namespace TelefonRehberi
 {
     internal class Menu
     {
-        private readonly MenuService _menuService = new();
+        private readonly MenuService _menuService;
+
+        public Menu(MenuService menuService)
+        {
+            _menuService = menuService;
+        }
 
         internal void MenuOptions(ConsoleKey key)
         {

@@ -8,7 +8,12 @@ namespace TelefonRehberi
 {
     internal class MenuService
     {
-        private readonly PersonService _service = new();
+        private readonly PersonService _service;
+
+        public MenuService(PersonService service)
+        {
+            _service = service;
+        }
 
 
         public string ListBlocked()

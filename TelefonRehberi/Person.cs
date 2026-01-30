@@ -11,15 +11,14 @@ namespace TelefonRehberi
         public string Name { get; }
         public string Surname { get; }
         public string PhoneNumber { get; }
-        public string FullName => string.Format("{0} {1}", Name, Surname);
+        public string FullName => $"{Name} {Surname}";
         public bool IsQuickCall { get; private set; } = false;
         public bool IsBlocked { get; private set; } = false;
         public override string ToString()
         {
-            string toPrint = string.Format("{0} : {1}",FullName,PhoneNumber);
+            string toPrint = $"{FullName} : {PhoneNumber}";
             if(IsBlocked) toPrint += " (ENGELLİ)";
             if(IsQuickCall) toPrint += " (HIZLI ARAMA)";
-            toPrint += Environment.NewLine;
             return toPrint;
         }
         public Person(string name, string surname, string phoneNumber)
