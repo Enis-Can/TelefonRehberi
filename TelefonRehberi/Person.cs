@@ -10,11 +10,11 @@ namespace TelefonRehberi
     {
         public string Name { get; }
         public string Surname { get; }
-        public string PhoneNumber { get; }
+        public PhoneNumber PhoneNumber { get; }
         public string FullName => $"{Name} {Surname}";
         public bool IsQuickCall { get; private set; } = false;
         public bool IsBlocked { get; private set; } = false;
-        public override string ToString()
+        public string PrintFormat()
         {
             string toPrint = $"{FullName} : {PhoneNumber}";
             if(IsBlocked) toPrint += " (ENGELLİ)";
@@ -25,16 +25,24 @@ namespace TelefonRehberi
         {
             Name = name;
             Surname = surname;
-            PhoneNumber = phoneNumber;
+            PhoneNumber = new(phoneNumber);
         }
-        public void ToggleQuickCall()
+        public void AddQuickCall()
         {
-            IsQuickCall = !IsQuickCall;
+            IsQuickCall = true;
+        }
+        public void RemoveQuickCall()
+        {
+            IsQuickCall = false;
         }
 
-        public void ToggleBlocked()
+        public void BlockPerson()
         {
-            IsBlocked = !IsBlocked;
+            IsBlocked = true;
+        }
+        public void UnblockPerson()
+        {
+            IsBlocked = false;
         }
     }
 }

@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 namespace TelefonRehberi
 {
-    internal class MenuService
+    internal class MenuService : IMenuService
     {
-        private readonly PersonService _service;
+        private readonly IPersonService _service;
 
-        public MenuService(PersonService service)
+        public MenuService(IPersonService service)
         {
             _service = service;
         }
@@ -20,7 +20,7 @@ namespace TelefonRehberi
         {
             if (_service.HasBlockedPersons())
             {
-                var blockedCount = Lister.ListPersons(_service.GetBlockedPersons());
+                var blockedCount = ListPersons(_service.GetBlockedPersons());
                 return string.Format("{0} adet engelli kişi listelendi.", blockedCount);
             }
             return "Engelli listesinde kayıtlı kişi bulunmamaktadır.";
@@ -30,7 +30,7 @@ namespace TelefonRehberi
         {
             if (_service.HasPersons())
             {
-                var personCount = Lister.ListPersons(_service.GetAllPersons());
+                var personCount = ListPersons(_service.GetAllPersons());
                 int index = Getter.GetInt("Engellemek istediğiniz kişinin numarasını giriniz: ", 1, personCount) - 1;
                 var personToBlock = _service.GetPerson(index);
                 if (personToBlock.IsBlocked)
@@ -39,7 +39,7 @@ namespace TelefonRehberi
                     Console.Write("{0} adlı kişinin engelini kaldırmak ister misiniz?(e) ", personToBlock.FullName);
                     if (Console.ReadKey().Key == ConsoleKey.E)
                     {
-                        personToBlock.ToggleBlocked();
+                        personToBlock.UnblockPerson();
                         return "Kişi engelli listesinden başarıyla çıkarıldı.";
                     }
                     else return "Kişi engelli listesinden çıkarma işlemi iptal edildi.";
@@ -49,7 +49,7 @@ namespace TelefonRehberi
                     Console.Write("{0} adlı kişiyi engelli listesine eklemek istediğinize emin misiniz?(e) ", personToBlock.FullName);
                     if (Console.ReadKey().Key == ConsoleKey.E)
                     {
-                        personToBlock.ToggleBlocked();
+                        personToBlock.BlockPerson();
                         return "Kişi engelli listesine başarıyla eklendi.";
                     }
                     else return "Kişi engelli listesine ekleme işlemi iptal edildi.";
@@ -62,7 +62,7 @@ namespace TelefonRehberi
         {
             if (_service.HasQuickCalls())
             {
-                var quickCallsCount = Lister.ListPersons(_service.GetQuickCalls());
+                var quickCallsCount = ListPersons(_service.GetQuickCalls());
                 return string.Format("{0} adet hızlı arama listelendi.", quickCallsCount);
             }
             else return "Hızlı arama listesinde kayıtlı kişi bulunmamaktadır.";
@@ -72,7 +72,7 @@ namespace TelefonRehberi
         {
             if (_service.HasPersons())
             {
-                var personsCount = Lister.ListPersons(_service.GetAllPersons());
+                var personsCount = ListPersons(_service.GetAllPersons());
                 int index = Getter.GetInt("Hızlı aramaya eklemek istediğiniz kişinin numarasını giriniz: ", 1, personsCount) - 1;
                 var personToAdd = _service.GetPerson(index);
                 if (personToAdd.IsQuickCall)
@@ -81,7 +81,7 @@ namespace TelefonRehberi
                     Console.Write("{0} adlı kişiyi hızlı arama listesinden çıkartmak ister misiniz?(e) ", personToAdd.FullName);
                     if (Console.ReadKey().Key == ConsoleKey.E)
                     {
-                        personToAdd.ToggleQuickCall();
+                        personToAdd.RemoveQuickCall();
                         return "Kişi hızlı arama listesinden başarıyla çıkarıldı.";
                     }
                     else return "Kişi hızlı arama listesinden çıkarma işlemi iptal edildi.";
@@ -91,7 +91,7 @@ namespace TelefonRehberi
                     Console.Write("{0} adlı kişiyi hızlı arama listesine eklemek istediğinize emin misiniz?(e) ", personToAdd.FullName);
                     if (Console.ReadKey().Key == ConsoleKey.E)
                     {
-                        personToAdd.ToggleQuickCall();
+                        personToAdd.AddQuickCall();
                         return"Kişi hızlı arama listesine başarıyla eklendi.";
                     }
                     else return "Kişi hızlı arama listesine ekleme işlemi iptal edildi.";
@@ -104,7 +104,7 @@ namespace TelefonRehberi
         {
             if (_service.HasPersons())
             {
-                var personsCount = Lister.ListPersons(_service.GetAllPersons());
+                var personsCount = ListPersons(_service.GetAllPersons());
                 int index = Getter.GetInt("Silinecek kişinin numarasını giriniz: ", 1, personsCount) - 1;
                 var personToRemove = _service.GetPerson(index);
                 Console.Write("{0} adlı kişiyi silmek istediğinize emin misiniz?(e) ", personToRemove.FullName);
@@ -125,7 +125,7 @@ namespace TelefonRehberi
                 var filteredPersons = _service.FindPerson(Getter.GetString("Aramak istediğiniz kişinin adı veya numarası: "));
                 if (filteredPersons.Any())
                 {
-                    Lister.ListPersons(filteredPersons);
+                    ListPersons(filteredPersons);
                     return string.Format("{0} adet kişi bulundu.", filteredPersons.Count);
                 }
                 else return "Arama kriterlerine uygun kişi bulunamadı.";
@@ -137,21 +137,35 @@ namespace TelefonRehberi
         {
             if (_service.HasPersons())
             {
-                var personsCount = Lister.ListPersons(_service.GetAllPersons());
+                var personsCount = ListPersons(_service.GetAllPersons());
                 return string.Format("{0} adet kişi listelendi.", personsCount);
             }
             else return "Rehberde kayıtlı kişi bulunmamaktadır.";
         }
 
-        public string AddPerson(string v)
+        public string AddPerson()
         {
             Console.WriteLine("Kişinin; ");
             var person = new Person(
                 Getter.GetString("Adı: "),
                 Getter.GetString("Soyadı: "),
                 Getter.GetPhoneNumber("Telefon Numarası: "));
-            _service.AddPerson(person);
+            if(!_service.AddPerson(person))
+            {
+                return "Bu telefon numarası rehberde kayıtlı bulunmaktadır.";
+            }
             return "Kişi rehbere başarıyla eklendi.";
+        }
+
+        private int ListPersons(IEnumerable<Person> persons)
+        {
+            int order = 0;
+            foreach (var person in persons)
+            {
+                order++;
+                Console.WriteLine($"{order}- {person.PrintFormat()}");
+            }
+            return order;
         }
     }
 }

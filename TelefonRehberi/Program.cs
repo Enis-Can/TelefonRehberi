@@ -12,8 +12,8 @@
 using TelefonRehberi;
 
 ConsoleKey key;
-PersonService personService = new();
-MenuService menuService = new(personService);
+IPersonService personService = new PersonService();
+IMenuService menuService = new MenuService(personService);
 Menu menu = new(menuService);
 
 do
@@ -34,6 +34,7 @@ do
 }
 while (key != ConsoleKey.D9 && key != ConsoleKey.NumPad9);
 
+Console.WriteLine();
 Console.WriteLine();
 Console.WriteLine("Uygulamayı kullandığınız için teşekkürler.");
 Console.WriteLine("Uygulamadan çıkmak için herhangi bir tuşa basınız.");

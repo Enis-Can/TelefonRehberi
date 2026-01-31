@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace TelefonRehberi
 {
-    internal class PersonService
+    internal class PersonService : IPersonService
     {
         private readonly List<Person> persons = new();
         private IEnumerable<Person> QuickCalls => persons.Where(p => p.IsQuickCall);
@@ -24,9 +24,14 @@ namespace TelefonRehberi
         {
             return persons.AsReadOnly();
         }
-        public void AddPerson(Person person)
+        public bool AddPerson(Person person)
         {
+            if(PhoneNumberExists(person.PhoneNumber.Number))
+            {
+                return false;
+            }
             persons.Add(person);
+            return true;
         }
         public void DeletePerson(Person person)
         {
@@ -47,12 +52,15 @@ namespace TelefonRehberi
         public bool HasBlockedPersons()
         {
             return BlockedPersons.Any();
-
+        }
+        public bool PhoneNumberExists(string phoneNumber)
+        {
+            return persons.Any(x => x.PhoneNumber.Number == phoneNumber);
         }
 
-        public List<Person> FindPerson(string searchTerm)
+        public IReadOnlyList<Person> FindPerson(string searchTerm)
         {
-            var filteredPersons = persons.Where(x => x.FullName.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) || x.PhoneNumber.Contains(searchTerm)).ToList();
+            var filteredPersons = persons.Where(x => x.FullName.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) || x.PhoneNumber.ToString().Contains(searchTerm)).ToList();
             return filteredPersons;
         }
     }

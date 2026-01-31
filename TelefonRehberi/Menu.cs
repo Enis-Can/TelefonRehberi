@@ -8,9 +8,9 @@ namespace TelefonRehberi
 {
     internal class Menu
     {
-        private readonly MenuService _menuService;
+        private readonly IMenuService _menuService;
 
-        public Menu(MenuService menuService)
+        public Menu(IMenuService menuService)
         {
             _menuService = menuService;
         }
@@ -99,7 +99,7 @@ namespace TelefonRehberi
         public void AddPerson(string v)
         {
             Header(v);
-            ToMenu(_menuService.AddPerson(v));
+            ToMenu(_menuService.AddPerson());
         }
 
         private void ToMenu(string v)
