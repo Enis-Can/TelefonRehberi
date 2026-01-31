@@ -161,5 +161,25 @@ namespace TelefonRehberi
             while (err);
             return txt;
         }
+
+        public static ConsoleKey GetConsoleKey(string msg, params ConsoleKey[] validKeys)
+        {
+            ConsoleKey key;
+            bool err = false;
+            do
+            {
+                Console.Write(msg);
+                key = Console.ReadKey().Key;
+                if (!validKeys.Contains(key))
+                {
+                    Console.WriteLine();
+                    Console.WriteLine("Hatalı bir tuşlama yaptınız.");
+                    err = true;
+                }
+                else err = false;
+            }
+            while (err);
+            return key;
+        }
     }
 }

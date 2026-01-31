@@ -29,7 +29,7 @@ namespace TelefonRehberi
                     break;
                 case ConsoleKey.NumPad3:
                 case ConsoleKey.D3:
-                    FindPerson("Kişi ARA");
+                    FindPerson("KİŞİ ARA");
                     break;
                 case ConsoleKey.NumPad4:
                 case ConsoleKey.D4:

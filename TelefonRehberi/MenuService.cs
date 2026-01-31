@@ -36,8 +36,8 @@ namespace TelefonRehberi
                 if (personToBlock.IsBlocked)
                 {
                     Console.WriteLine("Seçilen kişi zaten engellenenler listesinde bulunmaktadır.");
-                    Console.Write("{0} adlı kişinin engelini kaldırmak ister misiniz?(e) ", personToBlock.FullName);
-                    if (Console.ReadKey().Key == ConsoleKey.E)
+                    ConsoleKey validation = Getter.GetConsoleKey($"{personToBlock.FullName} adlı kişinin engelini kaldırmak ister misiniz?(e/h) ", ConsoleKey.E, ConsoleKey.H);
+                    if (validation == ConsoleKey.E)
                     {
                         personToBlock.UnblockPerson();
                         return "Kişi engelli listesinden başarıyla çıkarıldı.";
@@ -46,8 +46,8 @@ namespace TelefonRehberi
                 }
                 else
                 {
-                    Console.Write("{0} adlı kişiyi engelli listesine eklemek istediğinize emin misiniz?(e) ", personToBlock.FullName);
-                    if (Console.ReadKey().Key == ConsoleKey.E)
+                    ConsoleKey validation = Getter.GetConsoleKey($"{personToBlock.FullName} adlı kişiyi engelli listesine eklemek istediğinize emin misiniz?(e/h) ", ConsoleKey.E, ConsoleKey.H);
+                    if (validation == ConsoleKey.E)
                     {
                         personToBlock.BlockPerson();
                         return "Kişi engelli listesine başarıyla eklendi.";
@@ -78,8 +78,8 @@ namespace TelefonRehberi
                 if (personToAdd.IsQuickCall)
                 {
                     Console.WriteLine("Seçilen kişi zaten hızlı arama listesinde bulunmaktadır.");
-                    Console.Write("{0} adlı kişiyi hızlı arama listesinden çıkartmak ister misiniz?(e) ", personToAdd.FullName);
-                    if (Console.ReadKey().Key == ConsoleKey.E)
+                    ConsoleKey validation = Getter.GetConsoleKey($"{personToAdd.FullName} adlı kişiyi hızlı arama listesinden çıkartmak ister misiniz?(e/h) ", ConsoleKey.E, ConsoleKey.H);
+                    if (validation == ConsoleKey.E)
                     {
                         personToAdd.RemoveQuickCall();
                         return "Kişi hızlı arama listesinden başarıyla çıkarıldı.";
@@ -88,8 +88,8 @@ namespace TelefonRehberi
                 }
                 else
                 {
-                    Console.Write("{0} adlı kişiyi hızlı arama listesine eklemek istediğinize emin misiniz?(e) ", personToAdd.FullName);
-                    if (Console.ReadKey().Key == ConsoleKey.E)
+                    ConsoleKey validation = Getter.GetConsoleKey($"{personToAdd.FullName} adlı kişiyi hızlı arama listesine eklemek istediğinize emin misiniz?(e/h) ", ConsoleKey.E, ConsoleKey.H);
+                    if (validation == ConsoleKey.E)
                     {
                         personToAdd.AddQuickCall();
                         return"Kişi hızlı arama listesine başarıyla eklendi.";
@@ -107,8 +107,8 @@ namespace TelefonRehberi
                 var personsCount = ListPersons(_service.GetAllPersons());
                 int index = Getter.GetInt("Silinecek kişinin numarasını giriniz: ", 1, personsCount) - 1;
                 var personToRemove = _service.GetPerson(index);
-                Console.Write("{0} adlı kişiyi silmek istediğinize emin misiniz?(e) ", personToRemove.FullName);
-                if (Console.ReadKey().Key == ConsoleKey.E)
+                ConsoleKey validation = Getter.GetConsoleKey($"{personToRemove.FullName} adlı kişiyi silmek istediğinize emin misiniz?(e/h) ", ConsoleKey.E, ConsoleKey.H);
+                if (validation == ConsoleKey.E)
                 {
                     _service.DeletePerson(personToRemove);
                     return "Kişi rehberden başarıyla silindi.";

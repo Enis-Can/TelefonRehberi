@@ -12,10 +12,8 @@ namespace TelefonRehberi
         string FindPerson();
         string AddPerson();
         string RemovePerson();
-
         string ListBlocked();
         string BlockPerson();
-
         string ListQuickCalls();
         string AddToQuickCall();
     }
